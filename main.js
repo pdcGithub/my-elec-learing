@@ -25,7 +25,7 @@ async function main(){
     await app.whenReady().then(()=>{
 
         //增加一个关于 ping 函数的捕捉器
-        ipcMain.handle('ping', (obj, strParam1, strParam2)=>{
+        ipcMain.handle('ping', (event, strParam1, strParam2)=>{
             return '接收到了,'+strParam1+','+strParam2+'||||'+new Date();
         });
     
