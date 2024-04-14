@@ -16,6 +16,8 @@ const createWindow = () => {
 
 //设置一个主函数
 async function main(){
+    //Squirrel 在 程序在 安装、更新、卸载等阶段，会通过调起主程序的方式通知到主程序，
+    //我们要把这些启动方式和用户主动打开的方式区别开来。
     if(require('electron-squirrel-startup')){
         app.quit()
         return ;
