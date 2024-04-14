@@ -6,7 +6,9 @@ contextBridge.exposeInMainWorld('versions', {
     chrome:()=>process.versions.chrome,
     electron:()=>process.versions.electron,
     //暴露一个被称为 ipcRenderer.invoke 的ping函数来触发该处理程序
-    ping:(strParam1, strParam2)=>ipcRenderer.invoke('ping', strParam1, strParam2)
+    ping:(strParam1, strParam2)=>ipcRenderer.invoke('ping', strParam1, strParam2),
+    //暴露一个 setTitle 方法，它将title值发送到main处理（单向）
+    setTitle: (title)=>ipcRenderer.send('set-title', title)
 });
 
 window.addEventListener('DOMContentLoaded', ()=>{

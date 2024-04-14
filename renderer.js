@@ -11,3 +11,13 @@ const pingfunc = async ()=>{
 //一个ping按钮
 const btnPing = document.getElementById("testPing");
 btnPing.onclick = pingfunc;
+
+//一个set-title按钮
+const btnSetTitle = document.getElementById("setTitle");
+btnSetTitle.addEventListener('click', ()=>{
+    //创建一个随机值
+    let randomStr = (Math.random()+"");
+    console.log();
+    //把随机值传递过去，作为 title
+    window.versions.setTitle(randomStr.substring(randomStr.length-4));
+});
