@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+        <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'"/>
+        <title>你好!</title>
+    </head>
+    <body>
+        <h1>你好!</h1>
+        <div>
+            <p>我们正在使用 Node.js，版本：<span id="node-version"></span></p>
+            <p>内置 Chromium 版本：<span id="chrome-version"></span></p>
+            <p>内置 Electron 版本：<span id="electron-version"></span></p>
+        </div>
+        <div>
+            <p>这里，我们使用暴露的全局信息来获取版本号</p>
+            <p id="info"></p>
+        </div>
+        <script type="text/javascript" src="./renderer.js"></script>
+    </body>
+</html>
