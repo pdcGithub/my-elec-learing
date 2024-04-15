@@ -21,3 +21,11 @@ btnSetTitle.addEventListener('click', ()=>{
     //把随机值传递过去，作为 title
     window.versions.setTitle(randomStr.substring(randomStr.length-4));
 });
+
+//一个btnOpenFile按钮
+const btnOpenFile = document.getElementById("btnOpenFile");
+btnOpenFile.addEventListener('click', async ()=>{
+    //点击后，等待后台返回选择的结果
+    const response = await window.versions.openFile();
+    document.getElementById("fileInfo").innerText = response;
+});

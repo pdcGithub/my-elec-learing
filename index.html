@@ -5,6 +5,11 @@
         <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
         <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'"/>
         <title>你好!</title>
+        <style>
+            *{
+                margin: 0px;padding: 0px;border: 0px;
+            }
+        </style>
     </head>
     <body>
         <h1>你好!</h1>
@@ -22,6 +27,10 @@
         </div>
         <div>
             <button id="setTitle" type="button">测试 set title</button>
+        </div>
+        <div>
+            <button id="btnOpenFile" type="button">测试 open file</button>
+            <span id="fileInfo"></span>
         </div>
         <script type="text/javascript" src="./renderer.js"></script>
     </body>

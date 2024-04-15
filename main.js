@@ -1,4 +1,4 @@
-const {app, BrowserWindow, ipcMain} = require('electron')
+const {app, BrowserWindow, ipcMain, dialog} = require('electron')
 //
 const path = require('node:path')
 
@@ -22,6 +22,16 @@ function handleSetTitle(event, title){
     win.setTitle(title);
 }
 
+//增加一个函数，用于打开一个本地窗口 ，并获取所选的路径
+async function handleFileOpen(){
+    const {canceled, filePaths} = await dialog.showOpenDialog();
+    if(!canceled){
+        return filePaths[0];
+    }else{
+        return "canceled...";
+    }
+}
+
 //设置一个主函数
 async function main(){
     //Squirrel 在 程序在 安装、更新、卸载等阶段，会通过调起主程序的方式通知到主程序，
@@ -39,6 +49,9 @@ async function main(){
 
         //增加一个关于 set-title 的函数处理（单向）
         ipcMain.on('set-title', handleSetTitle);
+
+        //增加一个关于 文件窗口处理的 捕捉器（双向）
+        ipcMain.handle('dialog:openFile', handleFileOpen);
 
         //创建主窗口
         createWindow();
