@@ -5,11 +5,7 @@
         <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
         <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'"/>
         <title>你好!</title>
-        <style>
-            *{
-                margin: 0px;padding: 0px;border: 0px;
-            }
-        </style>
+        <link href="init.css" rel="stylesheet" />
     </head>
     <body>
         <h1>你好!</h1>
@@ -31,6 +27,9 @@
         <div>
             <button id="btnOpenFile" type="button">测试 open file</button>
             <span id="fileInfo"></span>
+        </div>
+        <div>
+            测试菜单触发计数处理，计数器信息：<span id="counterId">0</span>
         </div>
         <script type="text/javascript" src="./renderer.js"></script>
     </body>

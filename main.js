@@ -1,24 +1,48 @@
-const {app, BrowserWindow, ipcMain, dialog} = require('electron')
+const {app, BrowserWindow, ipcMain, dialog, Menu} = require('electron')
 //
 const path = require('node:path')
 
 //窗口创建函数
 const createWindow = () => {
+
+    //主窗口
     const win = new BrowserWindow({
-        width:800,
+        width:1000,
         height:600,
         webPreferences:{
             preload:path.join(__dirname, 'preload.js')
         }
     })
+
+    //修改菜单
+    const menu = Menu.buildFromTemplate([
+        {
+            label: app.name,
+            submenu:[
+                {
+                    label:"Increment",
+                    click:()=> win.webContents.send('update-counter', 1)
+                },
+                {
+                    label:"Decrement",
+                    click:()=> win.webContents.send('update-counter', -1)
+                }
+            ]
+        }
+    ]);
+    //设置菜单
+    Menu.setApplicationMenu(menu);
+    //加载页面
     win.loadFile('index.html');
+    //打开开发者工具
+    win.webContents.openDevTools();
 }
 
 //增加一个函数，用于接收render传来的title值，然后设置新的title
 function handleSetTitle(event, title){
     const webContents = event.sender;
     const win = BrowserWindow.fromWebContents(webContents);
-    console.log(title);
+    //console.log(title);
     win.setTitle(title);
 }
 

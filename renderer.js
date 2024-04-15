@@ -29,3 +29,11 @@ btnOpenFile.addEventListener('click', async ()=>{
     const response = await window.versions.openFile();
     document.getElementById("fileInfo").innerText = response;
 });
+
+//菜单计数处理
+const counter = document.getElementById("counterId");
+window.versions.onUpdateCounter((value)=>{
+    const oldValue = Number(counter.innerText);
+    const newValue = value + oldValue;
+    counter.innerText=newValue.toString();
+});

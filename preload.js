@@ -10,8 +10,9 @@ contextBridge.exposeInMainWorld('versions', {
     //暴露一个 setTitle 方法，它将title值发送到main处理（单向）
     setTitle: (title)=>ipcRenderer.send('set-title', title),
     //暴露一个文件选择窗口的调用方法 openFile （双向）
-    openFile: ()=>ipcRenderer.invoke("dialog:openFile")
-
+    openFile: ()=>ipcRenderer.invoke("dialog:openFile"),
+    //暴露一个 onUpdateCounter 方法，用于接收 主进程 送来的 信息。（这是一个监听函数）
+    onUpdateCounter:(callback)=>ipcRenderer.on('update-counter', (_event, value)=>callback(value))
 });
 
 window.addEventListener('DOMContentLoaded', ()=>{
