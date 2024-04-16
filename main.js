@@ -1,81 +1,50 @@
-const {app, BrowserWindow, ipcMain, dialog, Menu} = require('electron')
-//
+const {app, BrowserWindow, ipcMain, nativeTheme} = require('electron')
 const path = require('node:path')
 
 //窗口创建函数
 const createWindow = () => {
-
     //主窗口
     const win = new BrowserWindow({
         width:1000,
         height:600,
-        webPreferences:{
-            preload:path.join(__dirname, 'preload.js')
+        webPreferences: {
+            preload: path.join(__dirname, 'preload.js')
         }
     })
-
-    //修改菜单
-    const menu = Menu.buildFromTemplate([
-        {
-            label: app.name,
-            submenu:[
-                {
-                    label:"Increment",
-                    click:()=> win.webContents.send('update-counter', 1)
-                },
-                {
-                    label:"Decrement",
-                    click:()=> win.webContents.send('update-counter', -1)
-                }
-            ]
-        }
-    ]);
-    //设置菜单
-    Menu.setApplicationMenu(menu);
     //加载页面
     win.loadFile('index.html');
     //打开开发者工具
     win.webContents.openDevTools();
 }
 
-//增加一个函数，用于接收render传来的title值，然后设置新的title
-function handleSetTitle(event, title){
-    const webContents = event.sender;
-    const win = BrowserWindow.fromWebContents(webContents);
-    //console.log(title);
-    win.setTitle(title);
-}
-
-//增加一个函数，用于打开一个本地窗口 ，并获取所选的路径
-async function handleFileOpen(){
-    const {canceled, filePaths} = await dialog.showOpenDialog();
-    if(!canceled){
-        return filePaths[0];
-    }else{
-        return "canceled...";
-    }
-}
-
 //设置一个主函数
 async function main(){
+
+    //启用全局沙盒化，安全设置
+    app.enableSandbox();
+
     //Squirrel 在 程序在 安装、更新、卸载等阶段，会通过调起主程序的方式通知到主程序，
     //我们要把这些启动方式和用户主动打开的方式区别开来。
     if(require('electron-squirrel-startup')){
         app.quit()
         return ;
     }
+
+    //捕捉处理，切换主题
+    ipcMain.handle('dark-mode:toggle', ()=>{
+        if(nativeTheme.shouldUseDarkColors){
+            nativeTheme.themeSource = 'light'
+        }else{
+            nativeTheme.themeSource = 'dark'
+        }
+        return nativeTheme.shouldUseDarkColors
+    })
+    //捕捉处理，设置主题为系统默认值
+    ipcMain.handle('dark-mode:system', ()=>{
+        nativeTheme.themeSource = 'system'
+    })
+
     await app.whenReady().then(()=>{
-
-        //增加一个关于 ping 函数的捕捉器
-        ipcMain.handle('ping', (event, strParam1, strParam2)=>{
-            return '接收到了,'+strParam1+','+strParam2+'||||'+new Date();
-        });
-
-        //增加一个关于 set-title 的函数处理（单向）
-        ipcMain.on('set-title', handleSetTitle);
-
-        //增加一个关于 文件窗口处理的 捕捉器（双向）
-        ipcMain.handle('dialog:openFile', handleFileOpen);
 
         //创建主窗口
         createWindow();
@@ -89,7 +58,9 @@ async function main(){
         app.on('activate', ()=>{
             if(BrowserWindow.getAllWindows().length()===0) createWindow()
         });
+        
     })
 }
 
+//主程序启动
 main().catch(console.error)
