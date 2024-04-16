@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+        <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'"/>
+        <title>你好!</title>
+        <link href="init.css" rel="stylesheet" />
+    </head>
+    <body>
+        <h1>你好!</h1>
+        <div>
+            <p>我们正在使用 Node.js，版本：<span id="node-version"></span></p>
+            <p>内置 Chromium 版本：<span id="chrome-version"></span></p>
+            <p>内置 Electron 版本：<span id="electron-version"></span></p>
+        </div>
+        <div>
+            <p>这里，我们使用暴露的全局信息来获取版本号</p>
+            <p id="info"></p>
+        </div>
+        <div>
+            <button id="testPing" type="button">测试 ping</button>
+        </div>
+        <div>
+            <button id="setTitle" type="button">测试 set title</button>
+        </div>
+        <div>
+            <button id="btnOpenFile" type="button">测试 open file</button>
+            <span id="fileInfo"></span>
+        </div>
+        <div>
+            测试菜单触发计数处理，计数器信息：<span id="counterId">0</span>
+        </div>
+        <script type="text/javascript" src="./renderer.js"></script>
+    </body>
+</html>
