@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+        <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'"/>
+        <title>你好!</title>
+        <link href="style.css" rel="stylesheet" />
+    </head>
+    <body>
+        <p>当前主题信息是: <strong id="theme-source">System</strong></p>
+        <button type="button" id="toggle-dark-mode" >切换深色、浅色主题</button>
+        <button type="button" id="reset-to-system" >恢复默认主题</button>
+        <script type="text/javascript" src="./renderer.js"></script>
+    </body>
+</html>
