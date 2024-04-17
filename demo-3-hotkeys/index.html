@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+        <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'"/>
+        <title>你好!</title>
+    </head>
+    <body>
+        <div>
+            <h3>你好，这里是本地快捷键测试</h3>
+            <h4>按住快捷键（Alt+Shift+I 在Windows系统） 或者 （Alt+Cmd+I 在 mac 系统） 将会显示一个提示信息。</h4>
+        </div>
+
+        <div>
+            <h3>你好，这里是全局快捷键测试</h3>
+            <h4>按住快捷键（Alt+Ctrl+P 在Windows系统） 或者 （Alt+Cmd+P 在 mac 系统） 将会显示一个提示信息。</h4>
+        </div>
+
+        <div>
+            <h3>你好，这里是浏览器页面快捷键测试</h3>
+            <h4>你按下了以下键（在键盘按下一个键用于测试）：<span id="last-keypress"></span></h4>
+        </div>
+
+        <script type="text/javascript" src="./renderer.js"></script>
+    </body>
+</html>
