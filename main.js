@@ -1,4 +1,5 @@
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, ipcMain} = require('electron')
+const path = require('node:path')
 
 //窗口创建函数
 const createWindow = () => {
@@ -9,7 +10,9 @@ const createWindow = () => {
         webPreferences:{
             //可以在 Electron 的 Web Workers 里使用 Node.js的特性。
             //要用的话，需把 webPreferences 中的 nodeIntegrationInWorker 选项设置为 true
-            nodeIntegrationInWorker:true
+            nodeIntegrationInWorker:true,
+            //预处理
+            preload:path.join(__dirname, 'preload.js')
         }
     });
     //加载页面
@@ -42,6 +45,17 @@ async function main(){
         app.on('activate', ()=>{
             if(BrowserWindow.getAllWindows().length()===0) createWindow()
         });
+    })
+
+    //设置拖拽的效果图标
+    const iconName = path.join(__dirname, "dragAndDrop.png")
+
+    //处理拖拽js，根据传来的 filename 来获取文件路径
+    ipcMain.on('ondragstart', (event, filename)=>{
+        event.sender.startDrag({
+            file: path.join(__dirname, filename),
+            icon: iconName
+        })
     })
 }
 
