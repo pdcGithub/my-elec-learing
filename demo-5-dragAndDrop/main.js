@@ -1,7 +1,5 @@
 const {app, BrowserWindow, ipcMain} = require('electron')
 const path = require('node:path')
-const fs = require('node:fs')
-const https = require('node:https')
 
 //窗口创建函数
 const createWindow = () => {
