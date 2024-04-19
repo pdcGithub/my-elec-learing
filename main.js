@@ -1,24 +1,29 @@
-const {app, BrowserWindow, ipcMain} = require('electron')
-const path = require('node:path')
+const {app, BrowserWindow, Notification} = require('electron')
+
+//增加一个函数，在主进程调用消息提示
+function showNotification(message){
+    //如果支持 Notification 则提示，否则将在后台打印
+    if(Notification.isSupported){
+        new Notification({title: app.name, body : message}).show();
+    } else {
+        console.log("你的操作系统不支持 Notification 消息提示，所以消息显示在后台，如下："+message);
+    }
+}
 
 //窗口创建函数
 const createWindow = () => {
     //主窗口
     const win = new BrowserWindow({
         width:1000,
-        height:600,
-        webPreferences:{
-            //可以在 Electron 的 Web Workers 里使用 Node.js的特性。
-            //要用的话，需把 webPreferences 中的 nodeIntegrationInWorker 选项设置为 true
-            nodeIntegrationInWorker:true,
-            //预处理
-            preload:path.join(__dirname, 'preload.js')
-        }
+        height:600
     });
     //加载页面
     win.loadFile('index.html');
     //打开开发者工具
     win.webContents.openDevTools();
+
+    //弹出消息提示
+    showNotification('这是一条由主进程发送出来的消息')
 }
 
 //设置一个主函数
@@ -45,17 +50,6 @@ async function main(){
         app.on('activate', ()=>{
             if(BrowserWindow.getAllWindows().length()===0) createWindow()
         });
-    })
-
-    //设置拖拽的效果图标
-    const iconName = path.join(__dirname, "dragAndDrop.png")
-
-    //处理拖拽js，根据传来的 filename 来获取文件路径
-    ipcMain.on('ondragstart', (event, filename)=>{
-        event.sender.startDrag({
-            file: path.join(__dirname, filename),
-            icon: iconName
-        })
     })
 }
 
