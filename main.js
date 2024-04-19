@@ -10,6 +10,31 @@ function showNotification(message){
     }
 }
 
+//任务栏的进度条处理
+function showProgreeBar(win){
+    //这里开始创建进度条
+    let incre = 0.1;
+    let oriVal = 0;
+    //提示消息
+    showNotification('进度条开始推进了...');
+    //每隔1秒更新一次
+    processInterval = setInterval(()=>{
+        //设置进度条
+        win.setProgressBar(oriVal);
+        if(oriVal==-1){
+            //如果进度条消失，则停止定时器
+            clearInterval(processInterval);
+            //提示消息
+            showNotification('进度条已满，定时器关闭成功.')
+        }
+        oriVal += incre;
+        if(oriVal>1) {
+            //如果进度 大于 1，则已完成，设置为-1。-1时进度条消失
+            oriVal = -1;
+        }
+    }, 1000);
+}
+
 //窗口创建函数
 const createWindow = () => {
     //主窗口
@@ -22,8 +47,8 @@ const createWindow = () => {
     //打开开发者工具
     win.webContents.openDevTools();
 
-    //弹出消息提示
-    showNotification('这是一条由主进程发送出来的消息')
+    //显示任务栏进度条
+    showProgreeBar(win);
 }
 
 //设置一个主函数
