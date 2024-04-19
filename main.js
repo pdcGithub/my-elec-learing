@@ -1,4 +1,5 @@
-const {app, BrowserWindow, Notification} = require('electron')
+const {app, BrowserWindow, Notification, Tray, Menu} = require('electron')
+const path = require('node:path')
 
 //增加一个函数，在主进程调用消息提示
 function showNotification(message){
@@ -10,29 +11,22 @@ function showNotification(message){
     }
 }
 
-//任务栏的进度条处理
-function showProgreeBar(win){
-    //这里开始创建进度条
-    let incre = 0.1;
-    let oriVal = 0;
-    //提示消息
-    showNotification('进度条开始推进了...');
-    //每隔1秒更新一次
-    processInterval = setInterval(()=>{
-        //设置进度条
-        win.setProgressBar(oriVal);
-        if(oriVal==-1){
-            //如果进度条消失，则停止定时器
-            clearInterval(processInterval);
-            //提示消息
-            showNotification('进度条已满，定时器关闭成功.')
-        }
-        oriVal += incre;
-        if(oriVal>1) {
-            //如果进度 大于 1，则已完成，设置为-1。-1时进度条消失
-            oriVal = -1;
-        }
-    }, 1000);
+//设置我自定义的托盘图标以及功能
+function setMyTray(){
+    //设置图标
+    let tray = new Tray(path.join(__dirname, 'application.png'))
+    //设置菜单
+    let myMenu = Menu.buildFromTemplate([
+        {label:'Item 1', type:'radio'},
+        {label:'Item 2', type:'radio', checked:true},
+        {label:'Item 3', type:'radio'},
+        {label:'Item 4', type:'radio'}
+    ])
+    tray.setContextMenu(myMenu);
+    tray.setTitle("My Title");
+    tray.setToolTip("My tooltip info.");
+    //消息提示
+    showNotification('系统托盘创建成功...')
 }
 
 //窗口创建函数
@@ -46,9 +40,6 @@ const createWindow = () => {
     win.loadFile('index.html');
     //打开开发者工具
     win.webContents.openDevTools();
-
-    //显示任务栏进度条
-    showProgreeBar(win);
 }
 
 //设置一个主函数
@@ -65,6 +56,10 @@ async function main(){
     }
 
     await app.whenReady().then(()=>{
+
+        //创建系统托盘
+        setMyTray();
+
         //创建主窗口
         createWindow();
         //窗口全部关闭事件
