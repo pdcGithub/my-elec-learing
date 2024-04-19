@@ -1,0 +1,21 @@
+@charset "UTF-8";
+
+/* 设置 body 标签高度 100% */
+html{
+    height: 100%;
+}
+body{
+    margin: 0px auto;
+    height: 95%;
+}
+.my-line{
+    width: 100%;
+    height: 10%;
+    padding-top: 10px;
+}
+.my-box{
+    width: 49%;
+    height: 90%;
+    border: 0px;
+    display: inline-block;
+}
