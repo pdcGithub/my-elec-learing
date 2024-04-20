@@ -1,47 +1,76 @@
-const {app, BrowserWindow, Notification} = require('electron')
-const path = require('node:path')
+const {app, BrowserWindow, Menu, MenuItem} = require('electron')
 
-//增加一个函数，在主进程调用消息提示
-function showNotification(message){
-    //如果支持 Notification 则提示，否则将在后台打印
-    if(Notification.isSupported){
-        new Notification({title: app.name, body : message}).show();
-    } else {
-        console.log("你的操作系统不支持 Notification 消息提示，所以消息显示在后台，如下："+message);
-    }
+//创建测试用的菜单
+function myApplicationMenu(){
+    let menu = new Menu();
+    menu.append(new MenuItem({
+        label:'无边框窗口',
+        click:()=>{
+            //创建一个无边框窗口
+            let subWin = new BrowserWindow({width:300, height:300, frame:false})
+            //因为无边框的弹窗，没法关闭，所以设置 3秒后自动关闭
+            setTimeout(()=>{
+                if(subWin && !subWin.isDestroyed()) {
+                    subWin.close()
+                    console.log('无边框窗口已关闭');
+                }
+            }, 3000)
+        }
+    }));
+    menu.append(new MenuItem({
+        label:'Overlay',
+        click:()=>{
+            //创建一个Overlay窗口
+            new BrowserWindow({width:300, height:300, titleBarStyle:'hidden', titleBarOverlay:true})
+        }
+    }));
+    menu.append(new MenuItem({
+        label:'Overlay2',
+        click:()=>{
+            //创建一个Overlay窗口，并自定义样式
+            new BrowserWindow({
+                                width:300,
+                                height:300, 
+                                titleBarStyle:'hidden',
+                                titleBarOverlay:{
+                                                color: '#2f3241',
+                                                symbolColor: '#74b1be',
+                                                height: 60
+                                                }
+                            })
+        }
+    }));
+    menu.append(new MenuItem({
+        label:'透明窗口',
+        click:()=>{
+            //创建一个透明窗口
+            let subWin ;
+            let platform = process.platform.substring(0,3).toLocaleLowerCase();
+            if(platform=='win'){
+                //在Windows上，仅在无边框窗口下起作用。
+                subWin = new BrowserWindow({width:300, height:300, transparent:true, frame:false})
+            }else{
+                subWin = new BrowserWindow({width:300, height:300, transparent:true})
+            }
+            //透明窗口无法看到，所以要自动关闭
+            setTimeout(()=>{
+                if(subWin && !subWin.isDestroyed()) {
+                    subWin.close();
+                    console.log('透明窗口已关闭');
+                }
+            }, 3000);
+        }
+    }));
+    return menu;
 }
 
 //窗口创建函数
 const createWindow = () => {
-
     //主窗口
     const win = new BrowserWindow({
         width:1000,
         height:600
     });
-
-    //设置缩略图工具栏（鼠标悬停在任务栏的图标上，即可看见）
-    win.setThumbarButtons([
-        {
-            icon: path.join(__dirname, 'left.png'),
-            tooltip:'向左',
-            click : () => {showNotification('你点击了，左键')}
-        },
-        {
-            icon: path.join(__dirname, 'right.png'),
-            tooltip:'向右',
-            click : () => {showNotification('你点击了，右键')}
-        }
-    ]);
-
-    //任务栏中的图标叠加
-    win.setOverlayIcon(path.join(__dirname, 'circle.png'), '这是一段描述信息...')
-
-    //任务栏中的图标闪烁（windows下，效果不是很明显）
-    win.flashFrame(true);
-    setTimeout(()=>{
-        win.flashFrame(false);/* 5秒后停止闪烁 */
-    }, 5000);
 }
 
 //设置一个主函数
@@ -50,25 +79,8 @@ async function main(){
     //启用全局沙盒化，安全设置
     app.enableSandbox();
 
-    //设置任务列表（在任务栏的图标上，右键点击即可看见）
-    app.setUserTasks([
-        {
-            program  : process.execPath,
-            arguments: '--new-window',
-            iconPath : process.execPath,
-            iconIndex: 0,
-            title    : '任务1',
-            description: '创建一个新窗口'
-        },
-        {
-            program  : process.execPath,
-            arguments: '--new-window',
-            iconPath : process.execPath,
-            iconIndex: 0,
-            title    : '任务2',
-            description: '创建一个新窗口'
-        }
-    ]);
+    //设置应用的菜单信息
+    Menu.setApplicationMenu(myApplicationMenu())
 
     //Squirrel 在 程序在 安装、更新、卸载等阶段，会通过调起主程序的方式通知到主程序，
     //我们要把这些启动方式和用户主动打开的方式区别开来。
