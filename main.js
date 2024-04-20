@@ -1,14 +1,29 @@
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, WebContentsView} = require('electron')
 
 //窗口创建函数
 const createWindow = () => {
+
     //主窗口
     const win = new BrowserWindow({
         width:1000,
-        height:600
+        height:600,
+        backgroundColor: '#efefef' /*将窗口的背景设置为 灰色，以便观察边框*/
     });
-    //加载页面
-    win.loadFile('index.html');
+
+    //加载子页面 view1 BrowserView 类已弃用，并替换为新的 WebContentsView 类。Electron v30.0.1
+    const view1 = new WebContentsView();
+    win.contentView.addChildView(view1);
+    view1.webContents.loadURL('https://electronjs.org');
+    view1.setBounds({ x: 0, y: 0, width: 400, height: 500 });
+
+    //加载子页面 view2 BrowserView 类已弃用，并替换为新的 WebContentsView 类。Electron v30.0.1
+    const view2 = new WebContentsView();
+    win.contentView.addChildView(view2);
+    view2.webContents.loadURL('https://www.mickarea.net'); /* 这是我的个人网站，有兴趣可以看看 */
+    view2.setBounds({ x: 450, y: 0, width: 500, height: 500 });
+
+    //打开开发者工具
+    //win.webContents.openDevTools();
 }
 
 //设置一个主函数
